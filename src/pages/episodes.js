@@ -36,12 +36,14 @@ const Episodes = () => {
         if (index === 18) setCount(false);
       }
       setArrayEpisodes(newArray);
+      return newArray;
     })
   };
 
   useEffect(() => {
     setCount(true);
     setArrayCharacters();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [number])
 
   const handleOpen = (data) => {
@@ -56,10 +58,10 @@ const Episodes = () => {
     <div className="App">
       <Container maxWidth="md">
         <Stack spacing={3}>
+          <FilterEpisodes episode={number} episodes={episodes} setEpisodes={setNumber}/>
           <Typography variant="h2" gutterBottom>
             Episodes
           </Typography>
-          <FilterEpisodes episode={number} episodes={episodes} setEpisodes={setNumber}/>
         </Stack>
         { characterLoading && <CardSkeleton /> }
         { !characterLoading && !characterEmpty &&

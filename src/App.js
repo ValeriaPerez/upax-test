@@ -1,6 +1,5 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
@@ -21,14 +20,17 @@ import FilterCharacter from './components/Filter/character';
 import Episodes from './pages/episodes';
 import Location from './pages/locations';
 
+import history from './utils/history';
+
 import './App.css';
 
 function App() {
   return (
-    <Router>
+    <Router history={history}>
       <Navbar />
       <Routes>
-        <Route exactly path="/" element={<Home />} />
+        <Route exactly path="" element={<Home />} />
+        <Route exactly path="?page=1" element={<Home />} />
         <Route exactly path="/episodes" element={<Episodes />} />
         <Route exactly path="/locations" element={<Location />} />
       </Routes>
@@ -49,6 +51,15 @@ const Home = () => {
     page, search, status, gender, species
   );
 
+  let api = `https://rickandmortyapi.com/api/character/?page=${page}&name=${search}&status=${status}&gender=${gender}&species=${species}`;
+
+  useEffect(() => {
+    (async function () {
+      let data = await fetch(api).then((res) => res.json());
+      console.log('res', data)
+    })();
+  }, [api]);
+
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (event, newPage) => {
@@ -59,6 +70,7 @@ const Home = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
   const handleOpen = (data) => {
     setDetailModal(data);
     setOpen(true);
@@ -71,7 +83,7 @@ const Home = () => {
     <div className="App">
       <Container maxWidth="md">
         <Stack spacing={3}>
-          <Search setSearch={setSearch} updatePageNumber={setPage} />
+          <Search setSearch={setSearch} />
           <FilterCharacter
             status={status}
             setStatus={setStatus}
@@ -106,6 +118,8 @@ const Home = () => {
           characterEmpty={characterEmpty}
           pages={characterInfo.pages}
           characterInfo
+          page={page}
+          setPage={setPage}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           rowsPerPage={rowsPerPage}

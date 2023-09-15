@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Pagination from '@mui/material/Pagination';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 
 import '../../App.css';
 
-const SimplePagination = ({ info, pages, characterEmpty }) => {
-  const [page, setPage] = useState(1);
+const SimplePagination = ({ setPage,  page, info, pages, characterEmpty }) => {
   const handleChange = (event, value) => {
     setPage(value);
   };
@@ -21,12 +20,16 @@ const SimplePagination = ({ info, pages, characterEmpty }) => {
     >
       <Divider variant='fullWidth' />
       <Pagination
+        hidePrevButton={!info.prev}
+        showFirstButton={info.prev}
+        showLastButton={info.next}
         count={pages}
         defaultPage={1}
         boundaryCount={2}
         page={page}
         onChange={handleChange}
         disabled={characterEmpty}
+        size='large'
       />
     </Stack>
   );
